@@ -2,13 +2,17 @@
 
 **Cài đặt HTK**
 
+
 Đọc file install_note.txt
 
 **Cài đặt Ruby 2.3**
 
+
 > https://www.ruby-lang.org/en/downloads/
 
 **Cài đặt thư viện**
+
+
 (sau khi đã cài đặt xong HTK và Ruby)
 
 ```sh
@@ -20,7 +24,9 @@ Nhớ đứng ở thư mục chính
 
 **Các tool bên ngoài**
 
+
 `Microphone` nên có
+
 `Audacity` phải có
 
 # Steps
@@ -55,6 +61,7 @@ Q: Tại sao không làm phone, dict chữ HOA
 
 A: Sợ bug, `http://www.ling.ohio-state.edu/~bromberg/htk_problems.html`
 
+
 Q: Có từ cắt kiểu gì cũng không nhận dạng đúng được, làm giảm % nhận dạng
 
 A: Bỏ từ đó ra, dùng Audacity thu theo format mono 32 bit float 48000 Hz, lựa chỗ vắng lặng ngồi thu
@@ -69,19 +76,29 @@ Q: Chạy như thế nào?
 
 A: Bạn mở Makefile, trong đó chứa lệnh theo từng cụm. Bạn đứng ở trên windows sẽ phải tự tạo batch file theo các lệnh từ trên xuống (không biết windows có cho 'echo' không)
 
+
 Q: Mình chạy bị lỗi, mình không chạy được
+
 A: Chắc chắn bạn đã cài đặt HTK đúng cách, cài ruby đúng cách (gọi được trong console) và bundle install được những thư viện trong Gemfile
 
+
 Q: Tại sao tui thấy có code thừa, chưa được gọi
+
 A: Tại lười phát triển tool mình thu qua micro rồi biết ngay là từ gì và lười xóa code ra
 
+
 Q: Tại sao nên dùng tool này
+
 A: Vì tool này tự tạo từ điển, tự fix lỗi, tự tạo lab file, suggest người ta nên cắt phone gì từ file nào trong audacity ... Giải quyết những vấn đề đau đầu khác
 
+
 Q: Độ chính xác trung bình bao nhiêu
+
 A: Tham số trong này mình không thay đổi so với recommend của thầy, tùy vào file bạn cắt có đúng trong Audacity hay không, trung bình là 20->40%
 
+
 Q: Có thể tăng độ chính xác được không
+
 A: Tự thu âm, nhớ là mono 32bit float 48000Hz (Hoặc bạn mở file được thu âm xem thông số của nó rồi setting lại trong Audacity)
 
 # License
