@@ -25,6 +25,7 @@ Nhớ đứng ở thư mục chính
 
 # Steps
 (if you don't understand any steps, better read EXPLAIN.md from now on)
+
 (có vấn đề gì cứ mở file EXPLAIN.md)
 
 **Làm lại make file nếu OS là Windows**
@@ -46,18 +47,26 @@ _Tự google cách chế lại `makefile` thành `batchfile`, nếu không thì 
 # Question/Answer
 
 Q: Vì sao hồi trước làm bị lỗi hoài vậy
+
 A: Vì bạn bị guide cũ nó lừa
 
+
 Q: Tại sao không làm phone, dict chữ HOA
+
 A: Sợ bug, `http://www.ling.ohio-state.edu/~bromberg/htk_problems.html`
 
 Q: Có từ cắt kiểu gì cũng không nhận dạng đúng được, làm giảm % nhận dạng
+
 A: Bỏ từ đó ra, dùng Audacity thu theo format mono 32 bit float 48000 Hz, lựa chỗ vắng lặng ngồi thu
 
+
 Q: Tại sao lại có thư mục BAD với cái file badproto.txt
+
 A: Vì từ điển của mình là từ điển rất rộng và *ngây thơ*, có một số phone như "q" không bao giờ đi lẻ mà phải dính với nhau "qu" (đố tìm ra từ nào xuất phát bằng q), mình phải loại những thằng này ra khỏi từ điển lẫn fulllist
 
+
 Q: Chạy như thế nào?
+
 A: Bạn mở Makefile, trong đó chứa lệnh theo từng cụm. Bạn đứng ở trên windows sẽ phải tự tạo batch file theo các lệnh từ trên xuống (không biết windows có cho 'echo' không)
 
 Q: Mình chạy bị lỗi, mình không chạy được
