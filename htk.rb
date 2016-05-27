@@ -44,7 +44,7 @@ class HTKSupport
 
 	def get_dict
 		master_string = []
-		File.open(File.join("dict","vndict.txt"), "r").each do |line|
+		File.open(File.join("dict","vndict.txt"), "r:UTF-8").each do |line|
 			# terminal end of line character
 			line.chomp!
 			master_string << line.to_telex
