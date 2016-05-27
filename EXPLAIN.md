@@ -11,6 +11,11 @@ Pre steps:
 - Make folder tree for HTK: ruby main.rb --mkdir
 - Make dictionary: ruby main.rb -d
   (if errors related to not found in dict blah blah, please insert NEW WORD to dict/vndict.txt then remake dict)
+	+ This source is containing vietnamese dict and its telex definition, if you use another language
+		+ Get your dictionary: https://github.com/titoBouzout/Dictionaries
+		+ Save your dictionary under: xxx.txt to folder dict
+		+ Replace vndict.txt in htk.rb by your xxx.txt (and output also to xxx.dic)
+		+ Use your knowledge to define charmap & cosonant in your language in string_helper.rb (need brain cells)
 - Make training label file: ruby main.rb --labelfiles
 	+ Convert from .txt to .lab which would compatiable to dictionary
 - Make gram-momoword.txt: ruby main.rb -g
