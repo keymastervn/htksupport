@@ -41,7 +41,7 @@ _Tự google cách chế lại `makefile` thành `batchfile`, nếu không thì 
 **Chuẩn bị**
 
 * 1. Đi thu âm (nếu chưa có 300 files thu âm)
-* 2. Đem 300 files này bỏ vào thư mục train_wav
+* 2. Đem 300 files này bỏ vào thư mục train_wav (kèm theo file .txt cùng tên)
 * 3. Chạy make prequisite để gen ra bộ đồ chơi cho train_wav
 * 4. Chạy make testing_suggestion để người ta lựa file lựa phone cắt cho chuẩn
 * 5. Xóa những file đã được lựa ở bước trên ra khỏi train_wav (không thì có khi nhận dạng 100%)
