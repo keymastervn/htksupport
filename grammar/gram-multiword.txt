@@ -1,0 +1,21 @@
+$subject = TOOI | TUI | TAO | MAFY | ANH | CHIJ | OONG | BOJN BAAY | BOJN TAO | ANH AASY | CHIJ AASY | CAAJU;
+$private_name = TOOSNG DUWJC | LYS LAN | TRAAFN HUWNG DDAJO;
+$tense_verb_supporter = SEX | DDAX;
+$verb = LAASY | DDASNH GIAS;
+$adverb = RAAST | QUAS;
+$adj = CAO | THAASP | BIFNH THUWOWFNG | DDEJP | HIEEFN | MAJNH MEX; 
+$count_words = CASC | NHIEEFU | MOOJT | HAI | BA;
+$object = CAAJU | BAJN | CHUS | ANH | CHIJ;
+$not = KHOONG | CHAWRNG;
+$to_be = PHARI | LAF;
+$preposition = TRONG | TREEN | DUWOWSI | NGOAFI;
+$refer_words = NAFY | KIA | NOJ;
+$noun = CAAY | COR | SOONG | RUWFNG | BAJN TRAI | BAJN GASI | OONG NOOJI | THUWS | HOOJP;
+$owner = CURA | THUOOJC VEEF;
+
+
+$out = RA;
+
+($subject [$tense_verb_supporter] $verb [$adverb] [$adj] [$count_words] $object sil)
+($subject [$tense_verb_supporter] $verb [$count_words] [OWR $preposition] $noun [$refer_words] [$out] sil)
+($subject [$not] [$to_be] $to_be [$count_words] $noun [$owner $subject] sil)

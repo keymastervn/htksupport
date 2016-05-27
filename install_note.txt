@@ -1,0 +1,7 @@
+HTK Mac installation guide
+- https://github.com/JoFrhwld/FAVE/wiki/HTK-on-OS-X
+HTK Windows installation guide
+- https://github.com/JoFrhwld/FAVE/wiki/HTK-on-Windows
+
+HTK in *UNIX installation guide can be install when reading README of HTK in
+ Compiling & Installing HTK under UNIX/Linux, OS X or Cygwin
