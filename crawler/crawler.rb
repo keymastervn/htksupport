@@ -14,7 +14,7 @@ SOURCE = [
 HREF_SKIP_SUFFIX = [
 	".img", ".imfg", ".jpeg", ".jpg", ".png", ".rss",
 	".css", ".js", "javascript", "document", "mailto:", "e.vnexpress.net",
-	"video", "facebook", "google", "twitter", "adv", "pdf", "contact", "lienhe", "lien-he"
+	"video", "facebook", "google", "twitter", "adv", "pdf", "contact", "lienhe", "lien-he", "#"
 ]
 
 SENTENCE_SKIP_NOT_INCLUDE = [
@@ -107,7 +107,7 @@ class Crawler
 			return
 		end
 
-		$result.write(get_sentence(page).join("\n"))
+		$result.write(get_sentence(page).join("\n") + "\n")
 
 		get_child_link(page).each{ |child_link|
 			queue.push(child_link)
