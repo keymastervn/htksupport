@@ -1,4 +1,5 @@
 require 'active_support/all'
+require 'uri'
 
 class String
 	CHARMAPTELEX = {
@@ -120,5 +121,15 @@ class String
 
 	def to_vni
 		# TODO: implement when in need
+	end
+
+	# crawler check page is category or not
+	def is_category
+		self.start_with?("/")
+	end
+
+	def is_valid_url
+		return true if self =~ URI::regexp || self.is_category
+		return false
 	end
 end
