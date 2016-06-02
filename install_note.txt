@@ -5,3 +5,10 @@ HTK Windows installation guide
 
 HTK in *UNIX installation guide can be install when reading README of HTK in
  Compiling & Installing HTK under UNIX/Linux, OS X or Cygwin
+
+Install HDecode
+1. http://htk.eng.cam.ac.uk/ftp/software/hdecode/HDecode-3.4.1.tar.gz
+2. Extract HDecode to the same HTK folder (which was downloaded before)
+3. $ make hdecode
+4. $ make install 
+5. $ make install-hdecode
