@@ -79,6 +79,14 @@ class String
   	'U' => ['Q']
   }
 
+  def uni_downcase
+  	self.mb_chars.downcase.wrapped_string
+  end
+
+  def uni_upcase
+  	self.mb_chars.upcase.wrapped_string
+  end
+
   def get_converted_suffix
   	suffix = []
 		self.split("").each {|c|
@@ -105,7 +113,7 @@ class String
   end
 
   def get_converted_prefix
-  	get_converted_suffix.gsub(" ", "")
+  	get_converted_suffix.tr('^A-Za-z0-9', '')
   end
 
 	# to telex to do transform TRỜI to "TROWFI<tab>TR OW F I sp"
@@ -113,10 +121,14 @@ class String
 		suffix = get_converted_suffix
 
 		# TROWFI
-		prefix = suffix.gsub(" ", "")
+		prefix = suffix.tr('^A-Za-z0-9', '')
 
 		# TROWFI<tab>TR OW F I sp
-		prefix + " " * (16-prefix.length) + suffix + " sp" 
+		prefix + " " * (16-prefix.length) + suffix
+	end
+
+	def with_pause
+		self + " sp"
 	end
 
 	def to_vni

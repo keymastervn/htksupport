@@ -2,8 +2,30 @@ require 'file-tail'
 require 'fileutils'
 require 'os'
 require 'open3'
+require 'yaml'
 
 class HTKSupport
+
+	SINGLEWORD = 2
+	SENTENCE = 3
+
+	def initialize
+		if File.exists?("config.yml")
+			config = YAML.load_file("config.yml")
+			@level = config["practice_level"]
+			@dict = {}
+		end
+	end
+
+	# TODO: Add to Makefile step as well as main.rb
+	def config(practice_level = SINGLEWORD)
+
+		raise "Invalid level" if ![SINGLEWORD, SENTENCE].include?(practice_level)
+
+		f = File.open("config.yml", "w")
+		f.write("practice_level: #{practice_level}\n")
+		f.close
+	end
 
 	def make_dirs
 		[ 
@@ -31,7 +53,8 @@ class HTKSupport
 			"hmm/hmm13",
 			"hmm/hmm14",
 			"hmm/hmm15",
-			"BAD"
+			"BAD",
+			"LM"
 		].each {|dir| FileUtils.mkdir_p dir}
 	end
 
@@ -42,21 +65,35 @@ class HTKSupport
 		File.delete(File.join("scp_files", "train.scp")) if File.exists? File.join("scp_files", "train.scp")
 	end
 
-	def get_dict
+	def get_dict(from_training_lab = false)
 		master_string = []
-		File.open(File.join("dict","vndict.txt"), "r:UTF-8").each do |line|
-			# terminal end of line character
-			line.chomp!
-			master_string << line.to_telex
+		if !from_training_lab
+			File.open(File.join("dict","vndict.txt"), "r:UTF-8").each do |line|
+				# terminal end of line character
+				line.chomp!
+				line = line.to_telex
+				line = line.with_pause
+				master_string << line
+			end
+		else
+			word_hash = {}
+			Dir.entries("train_wav").select {|f| f.end_with? ".txt"}.each do |file|
+				File.open(File.join("train_wav", file)).read.chomp.squeeze(" ").split(" ").each { |word|
+					word_hash[word] = true
+				}
+			end
+			word_hash.each_key do |word|
+				master_string << word.to_telex.with_pause
+			end
 		end
+
 		# sort string alphabetically
 		master_string.sort_by!(&:downcase)
-		# add silent to end
-		master_string << "silence\t     sil\r\n"
-		# \n is Unix-like end of line
-		master_string = master_string.join("\r\n")
-	  
-	  File.write(File.join("dict","vndict.dic"), master_string)
+		master_string << "SENT-START   []   sil" if @level == SENTENCE
+		master_string << "SENT-END   []   sil" if @level == SENTENCE
+		master_string << "silence     sil"
+
+		File.write(File.join("dict","vndict.dic"), master_string.join("\r\n") + "\r\n")
 	end
 
 	def get_monophone_from_dict
@@ -65,6 +102,7 @@ class HTKSupport
 
 		File.open(File.join("dict","vndict.dic"), 'r').each do |line|
 			line.chomp!
+			# next if line.start_with?("SENT")
 
 			phonetic = line.split("   ").reject { |c| c.empty? }[1]
 
@@ -74,6 +112,9 @@ class HTKSupport
 		hash_monophone.each_key do |key|
 			master_string << key
 		end
+
+		# For SENTENCE-TRAINING
+		# master_string << "sil" if !master_string.include? "sil"
 
 		master_string = master_string.join("\n")
 	  
@@ -114,13 +155,15 @@ class HTKSupport
 			Dir.entries(folder_path).select {|_f| _f.end_with? ".wav"}.each do |file|
 				another_master_string = []
 				wav_f = File.join(folder_path,file)
-				txt_f = wav_f.gsub(File.extname(wav_f), ".txt")
+				txt_f = wav_f.gsub(File.extname(wav_f), ".lab")
+
+				File.exists?(txt_f) ? nil : (txt_f = wav_f.gsub(File.extname(wav_f), ".txt")) 
 
 				File.open(txt_f, "r").each do |line|
 					line.chomp.squeeze(" ").split(" ").each {|word| another_master_string << word.get_converted_prefix}
 				end
 
-				f.write(wav_f + "\t" + another_master_string.join(" ") + "\n")
+				f.write(txt_f + "\t" + another_master_string.join(" ") + "\n")
 			end
 		else
 			raise "Please input text or file_name to make prompt"
@@ -199,23 +242,60 @@ class HTKSupport
 		train_file.close
 	end
 
+	def prefetch_dict
+		File.open(File.join("dict", "vndict.dic"), "r").each do |line|
+			line.chomp!
+			@dict[line.split("   ", 2).first] = true
+		end
+	end
+
 	def make_grammar_file
+		prefetch_dict
+
+		case @level
+		when SINGLEWORD
+			structure = "(<$word>)"
+		when SENTENCE
+			structure = "( SENT-START <$word> SENT-END )"
+		end
+
 		words = {}
 		master_string = []
-		grammar_file = File.open(File.join("grammar","gram-monoword.txt"), "w")
-		Dir.entries("train_wav").select {|f| f.end_with? ".txt"}.each do |file|
+		grammar_file = File.open(File.join("grammar","gram.txt"), "w")
+		Dir.entries("train_wav").select {|f| f.end_with? ".lab"}.each do |file|
 			File.open(File.join("train_wav", file), "r").each do |line|
-				line.chomp.squeeze(" ").split(" ").each {|word| words[word.get_converted_prefix] = ""}
+				line.chomp.gsub(/[:,?.!]/, " ")
+					.squeeze(" ")
+					.split(" ")
+					.each {|word| words[word] = true}
 			end
 		end
 		
 		words.each_key do |key|
-			master_string << key
+			if @dict[key].nil?
+
+				puts "The word '#{key}' is not available for dictionary yet."
+				print "Do you want to add this word to grammar or not? Y/N: "
+				while user_input = gets.chomp
+					case user_input.upcase
+					when "Y"
+						master_string << key
+						puts "Added '#{key}'' to grammar"
+						break
+					else
+						puts "Skipped '#{key}'"
+						break
+					end
+				end
+			else
+				master_string << key
+			end
 		end
+
 		grammar_file.write(
 			["$word = #{master_string.join(" | ")};",
 			"",
-			"(<$word>)"].join("\n")
+			structure].join("\n")
 			)
 		
 		grammar_file.close
@@ -270,7 +350,7 @@ class HTKSupport
 		hmmdef_file.write(master_string.join(""))
 	end
 
-	def add_short_pause_to_hmmdef(source_path, dest_path)
+	def padd_short_pause_to_hmmdef(source_path, dest_path)
 
 		raise "Source path khong chua hmmdefs hoac macros" if 
 		 !File.exists?(File.join(source_path,"hmmdefs")) ||
@@ -323,6 +403,7 @@ class HTKSupport
 		FileUtils.cp File.join(source_path,"macros"), dest_path
 	end
 
+	# TODO fix sil => SENT in wintri if level = 3
 	def correct_wintri
 		raise "Vui long tao wintri truoc khi correct" if !File.exists?(File.join("mlf","wintri.mlf"))
 		master_string = []
@@ -365,7 +446,7 @@ class HTKSupport
 	def make_tree_hed(threshold)
 		raise "Vui long tao monophones0 truoc khi tao tree.hed" if !File.exists?(File.join(Dir.pwd, "phones", "monophones0"))
 		thresh_hold = threshold.to_i
-		monophone_path = File.join(Dir.pwd, "phones", "monophones0")
+		monophone_path = File.join(Dir.pwd, "phones", "monophones1")
 		master_string = []
 		tree_hed_file = File.new(File.join(Dir.pwd, "ins", "tree.hed"), "w")
 
@@ -495,22 +576,87 @@ class HTKSupport
 	def make_testwords
 		raise "Chua tao file phone.wav bang audacity trong testing" if Dir.glob(File.join("test_wav", "*")).empty?
 
+		# make lab file by the way
+		if @level == SINGLEWORD
+			File.new(File.join("test_wav",file).gsub(".wav", ".lab"), "w").write(word + "\n")
+		end
+
 		master_string = []
 		testwords = File.open(File.join("mlf", "testwords.mlf"),"w")
 		master_string << "#!MLF!#"
-		Dir.entries("test_wav").select {|_f| _f.end_with? ".wav"}.each do |file|
-			word = file.split(".")[0]
-			master_string << "\"" + File.expand_path(File.join("test_wav",file)) + "\""
+		Dir.entries("test_wav").select {|_f| _f.end_with? ".lab"}.each do |file|
+			word = File.read(File.join("test_wav", file))
+			master_string << "\"" + File.expand_path(File.join("test_wav",file.gsub(".lab", ".wav"))) + "\""
 			master_string << word
 			master_string << "."
-
-			# make lab file by the way
-			File.new(File.join("test_wav",file).gsub(".wav", ".lab"), "w").write(word + "\n")
 		end
 
 		testwords.write(master_string.join("\n") + "\n")
 
 		testwords.close
+	end
+
+	# TODO: Parse prompts file in corpus to *label file
+	def parse_prompts(prompts_path, destination = 'train_wav')
+		# Parse a Corpus Prompt and make Label file to specific destination
+		# Remember u have to copy all the files training corpus to train_wav
+		raise "File does not exists" if !File.exists?(prompts_path)
+
+		convert_wrong = {}
+		File.open(File.join("dict", "vnabbre_synonym_misspell.txt"), "r:UTF-8").each do |line|
+			line.chomp!
+			prefix = line.split("\t").first
+			suffix = line.split("\t").last
+			convert_wrong[prefix] = suffix
+			# suffix = line.split("\t").last.split(" ").map {|word| word.get_converted_suffix}.join(" sp ")
+			# master_string << prefix + " " * (16-prefix.length) + suffix + " sp"
+		end
+
+		File.open(prompts_path, "r").each {|line|
+			line.chomp!
+			file, text = line.split(" ", 2)
+			IO.write(
+				File.join(destination, file << ".lab"), 
+				text.uni_downcase.split(" ").map {|word|
+					convert_wrong[word].nil? ? word.get_converted_prefix : convert_wrong[word].get_converted_prefix
+				}.join(" "),
+				0,
+				{mode: "w"}
+			)
+
+			IO.write(
+				File.join(destination, file.gsub(".lab", ".txt")), 
+				text.uni_downcase.split(" ").map {|word|
+					convert_wrong[word].nil? ? word : convert_wrong[word]
+				}.join(" "),
+				0,
+				{mode: "w"}
+			)
+		}
+	end
+
+	def format_crawled_data(file_path = '/', to_file)
+		# input: Hôm nay trời nắng vãi
+		# output: <s> hoom nay trowfi nawsng vaxi </s>
+		h_map = File.open(File.join("dict", "vnabbre_synonym_misspell.txt"))
+						.read
+						.split("\n")
+						.map {|pkg| pkg.uni_downcase.split("\t") }
+						.to_h
+
+		f = File.new(to_file, "w")
+		File.open(file_path, "r:UTF-8").each {|line|
+			line.chomp!
+			begin
+				line = line.uni_downcase.squeeze(" ").split(" ").map {|word| 
+					word = h_map[word] if !h_map[word].nil?
+					word.get_converted_prefix}.join(" ")
+				f.write(["<s>", line, "</s>"].join(" ") + "\n")
+			rescue
+				next
+			end
+		}
+		f.close
 	end
 end
 
@@ -521,7 +667,7 @@ class LabelFile
 
 	def initialize(prompt_line)
 		comp = prompt_line.split("\t")
-		self.file_dir = "\"#{comp[0]}\""
+		self.file_dir = "\"#{comp[0]}\"".gsub(".wav", ".lab")
 		self.texts = comp[1].chomp.gsub(" ", "\n")
 	end
 

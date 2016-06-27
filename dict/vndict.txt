@@ -1,11 +1,14 @@
 a
 ai
+au
 am
 an
 ang
 anh
 ao
-au
+ầu
+ây
+b
 ba
 bai
 ban
@@ -344,6 +347,7 @@ bự
 bựa
 bực
 bựt
+c
 ca
 cai
 cam
@@ -703,6 +707,7 @@ cui
 cum
 cun
 cung
+cuông
 cuốc
 cuối
 cuốn
@@ -936,6 +941,7 @@ cự
 cựa
 cực
 cựu
+d
 da
 dai
 dam
@@ -944,6 +950,7 @@ dang
 danh
 dánh
 dao
+dáo
 day
 de
 deo
@@ -951,6 +958,7 @@ di
 dim
 dinh
 diêm
+diệm
 diên
 diêu
 diếc
@@ -1189,6 +1197,7 @@ en
 eng
 eo
 ga
+góa
 gai
 gam
 gan
@@ -1383,6 +1392,7 @@ goá
 goòng
 gram
 gu
+gú
 guốc
 guồi
 guồng
@@ -1596,11 +1606,13 @@ hoặc
 hoẹt
 hoẻn
 hu
+hụ
 hua
 hum
 hun
 hung
 huy
+húy
 huynh
 huyên
 huyết
@@ -1610,6 +1622,7 @@ huyện
 huyệt
 huân
 huê
+huế
 huênh
 huý
 huých
@@ -1666,6 +1679,7 @@ hét
 hê
 hên
 hênh
+hễ
 hì
 hình
 hí
@@ -1866,6 +1880,7 @@ im
 in
 inh
 iu
+k
 ka
 ke
 kem
@@ -1907,6 +1922,7 @@ khoai
 khoan
 khoang
 khoanh
+khỏa
 khoe
 khoeo
 khom
@@ -2185,6 +2201,7 @@ kị
 kịch
 kịp
 kịt
+ky
 ký
 kỳ
 kỷ
@@ -2292,6 +2309,7 @@ luộm
 luỵ
 luỹ
 ly
+lỵ
 là
 lài
 làm
@@ -2606,6 +2624,7 @@ lựa
 lực
 lựng
 lựu
+m
 ma
 mai
 man
@@ -2637,6 +2656,7 @@ miện
 miệng
 miệt
 mo
+mọ
 moay
 moi
 mom
@@ -2662,6 +2682,7 @@ muỗm
 muỗng
 muội
 muộn
+mương
 my
 mý
 mỹ
@@ -2689,6 +2710,7 @@ mâm
 mân
 mâng
 mâu
+mẩu
 mây
 mã
 mãi
@@ -2762,6 +2784,7 @@ mũ
 mũi
 mũm
 mơ
+mợ
 mơi
 mơn
 mưa
@@ -2907,6 +2930,7 @@ nam
 nan
 nang
 nanh
+nẵng
 nao
 nau
 nay
@@ -2925,6 +2949,7 @@ ngay
 nghe
 nghi
 nghinh
+nghĩnh
 nghiu
 nghiêm
 nghiên
@@ -3019,6 +3044,7 @@ nguy
 nguyên
 nguyền
 nguyện
+nguyễn
 nguyệt
 nguýt
 nguẩy
@@ -3206,6 +3232,7 @@ ngựa
 ngực
 nha
 nhai
+nhại
 nham
 nhan
 nhang
@@ -3217,6 +3244,7 @@ nhe
 nhem
 nhen
 nheo
+nhếch
 nhi
 nhinh
 nhiu
@@ -3231,6 +3259,7 @@ nhiễu
 nhiệm
 nhiệt
 nho
+nhõng
 nhoai
 nhoang
 nhoay
@@ -3758,12 +3787,14 @@ pan
 pao
 pe
 pha
+phan
 phai
 phang
 phanh
 phao
 phau
 phay
+phạc
 phe
 phen
 pheo
@@ -3941,7 +3972,10 @@ phựa
 phựt
 pi
 pin
+pí
+pín
 ping
+piêu
 pom
 pu
 pác
@@ -3961,11 +3995,14 @@ quay
 que
 quen
 queo
+quờn
+quới
 quoàng
 quoạng
 quoắt
 quuyết
 quy
+quỵ
 quyên
 quyến
 quyết
@@ -4070,7 +4107,9 @@ quệnh
 quệt
 quịt
 qui
+quí
 quì
+quỉ
 quốc
 quớ
 quờ
@@ -4100,6 +4139,7 @@ reng
 reo
 ri
 ria
+rịa
 rim
 rin
 rinh
@@ -4112,9 +4152,11 @@ riếu
 riềm
 riềng
 riệt
+riếp
 ro
 roa
 roi
+rỏi
 rom
 rong
 ru
@@ -4425,6 +4467,8 @@ suối
 suốt
 suồng
 suỵt
+sỹ
+sy
 sà
 sài
 sàm
@@ -4640,6 +4684,7 @@ sự
 sực
 sựng
 sựt
+t
 ta
 tai
 tam
@@ -4653,6 +4698,7 @@ tem
 ten
 teng
 teo
+tén
 tha
 thai
 tham
@@ -4695,6 +4741,7 @@ thoa
 thoai
 thoang
 thoi
+thới
 thom
 thon
 thong
@@ -4990,7 +5037,10 @@ tiệp
 tiệt
 to
 toa
+tòa
+tọa
 toan
+toản
 toang
 toanh
 toe
@@ -4998,6 +5048,7 @@ toen
 toi
 tom
 ton
+top
 tong
 toong
 tout
@@ -5015,6 +5066,7 @@ toèn
 toé
 toét
 toòng
+tỏa
 toạ
 toạc
 toại
@@ -5064,6 +5116,7 @@ truật
 truồng
 truột
 truỵ
+trư
 trà
 trài
 tràm
@@ -5305,6 +5358,9 @@ tuột
 tuỳ
 tuỷ
 ty
+tý
+tỷ
+tỵ
 tà
 tài
 tàn
@@ -5452,6 +5508,7 @@ tẩn
 tẩu
 tẩy
 tận
+tậm
 tập
 tật
 tậu
@@ -5581,6 +5638,7 @@ uở
 uỳnh
 uỵch
 uỷ
+v
 va
 vai
 van
@@ -5592,6 +5650,7 @@ ve
 ven
 veo
 vi
+vy
 vinh
 viêm
 viên
@@ -5828,6 +5887,7 @@ vựa
 vực
 vựng
 x
+xy
 xa
 xam
 xan
@@ -5835,6 +5895,7 @@ xang
 xanh
 xao
 xay
+xắt
 xe
 xem
 xen
@@ -5856,6 +5917,7 @@ xiển
 xiểng
 xo
 xoa
+xõa
 xoan
 xoang
 xoay
@@ -6208,12 +6270,14 @@ yểu
 đen
 đeo
 đi
+đia
 đin
 đinh
 điên
 điêu
 điếc
 điếm
+điềm
 điếng
 điếu
 điền
@@ -6226,6 +6290,7 @@ yểu
 điệp
 điệu
 đo
+đóa
 đoan
 đoi
 đom

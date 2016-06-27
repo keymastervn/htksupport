@@ -34,24 +34,6 @@ $new_word = []
 
 $result = File.open($output, "w:UTF-8")
 
-# In order to automatically add new word from the internet to Dict 
-# (for unit standard, Nouns, strange phrases)
-def prefetch_dict
-	File.open(File.join("..", "dict", "vndict.txt"), "r").each do |line|
-		$dict[line] = true
-	end
-end
-
-def add_word_to_dict
-	# TODO: replace new_dict.txt by vndict.dic
-	f = File.open(File.join("..", "dict", "new_dict.dic"), "w+")
-	$new_word.each {|word|
-		next if word =~ /\d/ 
-		f.write(word.to_telex)
-	}
-	f.close
-end
-
 class Crawler
 
 	def initialize(link)
@@ -174,3 +156,7 @@ SOURCE.each do |site|
 end
 
 threads.map(&:join)
+
+# a =  File.open("crawl_result.txt", "r:UTF-8").readlines
+# f = File.open("result.txt", "w:UTF-8")
+# f.write(a.join("").gsub("\n\n", "\n"))

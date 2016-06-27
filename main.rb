@@ -23,12 +23,16 @@ class Parser
         options.file_path = v
       end
 
+      opts.on("-topath", "--topath=OUTPUT_TO_PATH", "Nhap dia chi folder can xuat file output") do |v|
+        options.output_file_path = v
+      end
+
       opts.on("--mkdir", "Tao prerequisite folder de phong HTK bao loi") do 
         htkrunner.make_dirs
       end
 
       opts.on("-d", "--dict", "Tao dict tu filepath vocabulary") do
-        htkrunner.get_dict
+        options.make_dict = true
       end
 
       opts.on("-im", "--gen-initial-monophone", "Tao monophone tu dict, phai co san dict tu truoc") do
@@ -90,6 +94,10 @@ class Parser
         options.flag = true
       end
 
+      opts.on("--level=LEVEL", "Kieu huan luyen 2-word | 3-sentence") do |level|
+        options.level = level
+      end
+
       opts.on("--make-mktri-hed", "Tao mktri.hed de nhai mo hinh monophone thanh triphone") do 
         htkrunner.make_mktri_hed
       end
@@ -115,10 +123,23 @@ class Parser
         htkrunner.make_testwords
       end
 
+      opts.on("-c", "--config", "Tao config") do 
+        options.configuration = true
+      end
+
+      opts.on("-gl", "--genlab") do 
+        options.genlab = true
+      end
+
+      opts.on("--cc", "Convert crawl file format text sang format sang") do 
+        options.convert_crawl = true
+      end
+
       opts.on("-h", "--help", "Prints this help") do
         puts opts
         exit
       end
+
     end
 
     opt_parser.parse!(args)
@@ -129,6 +150,10 @@ end
 options = Parser.parse(ARGV)
 
 runner = HTKSupport.new
+
+if options.make_dict
+  runner.get_dict(options.flag)
+end
 
 if options.do_create_prompt
 	runner.make_prompt_file(options.file_path.to_s, options.text.to_s) 
@@ -149,4 +174,21 @@ end
 
 if options.recommend_training
   runner.recommend_training(options.number_to_train, options.flag)
+end
+
+if options.configuration
+  raise "Vui long nhap --level= neu con thieu" if options.level.nil?
+  runner.config(options.level.to_i)
+end
+
+if options.genlab
+  raise "Vui long nhap --path" if options.file_path.nil?
+  raise "Vui long nhap --topath" if options.output_file_path.nil?
+  runner.parse_prompts(options.file_path.to_s, options.output_file_path.to_s)
+end
+
+if options.convert_crawl
+  raise "Vui long nhap --path" if options.file_path.nil?
+  raise "Vui long nhap --topath" if options.output_file_path.nil?
+  runner.format_crawled_data(options.file_path.to_s, options.output_file_path.to_s)
 end
