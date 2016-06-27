@@ -1,0 +1,66 @@
+ko	không
+khg	không
+dc	được
+đc	được
+ng	người
+cmnr	con mẹ nó rồi
+klq	không liên quan
+qtqd	quá trời quá đất
+clgt	cậu làm gì thế
+gato	ghen ăn tức ở
+ny	người yêu
+fb	facebook
+nxb	nhà xuất bản
+clb	câu lạc bộ
+htx	hợp tác xã
+tp	thành phố
+ubnd	ủy ban nhân dân
+tr	trang
+boa	bo
+típ	bo
+dãng	vãng
+dờn	rờn
+nộc	lộc
+1	một
+2	hai
+3	ba
+4	bốn
+5	năm
+6	sáu
+7	bảy
+8	tám
+9	chín
+0	không
+khoẻ	khỏe
+xoè	xòe
+quị	quỵ
+qùy	quỳ
+qùi	quì
+qúi	quý
+qúy	quý
+qụi	quỵ
+qụy	quỵ
+quĩ	quỹ
+qũy	quỹ
+qũi	quỹ
+quỉ	quỷ
+qủi	quỷ
+qủy	quỷ
+qùa	quà
+qủa	quả
+qũa	quã
+qụa	quạ
+qúa	quá
+qủe	quẻ
+qùe	què
+qúe	qué
+qũe	quẽ
+qụe	quẹ
+mỳ	mì
+toả	tỏa
+qụat	quạt
+qụeo	quẹo
+qụet	quẹt
+qụang	quạng
+qụit	quỵt
+qụyt	quỵt
