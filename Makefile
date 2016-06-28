@@ -7,7 +7,7 @@ practice_sentence:
 prequisite:
 	ruby main.rb --mkdir
 	ruby main.rb --clean-scp-files
-	ruby main.rb -d --f
+	ruby main.rb -d
 	ruby main.rb --labelfiles
 	ruby main.rb --grammar
 	HParse grammar/gram.txt wdnet/wdnet.txt
@@ -63,6 +63,8 @@ training:
 
 training_sentence:
 	@echo "Training hmm-sentence"
+	@echo "Overriding many things"
+	ruby main.rb -d --f
 	ruby main.rb -p --path='train_wav'
 	HDMan -m -w wlist -n phones/monophones -l dict.log dict/vndict.log dict/vndict.dic
 	perl pl/mkMonophones.pl phones/monophones phones/monophones0 phones/monophones1
@@ -84,7 +86,7 @@ training_sentence:
 	HERest -C cfg/HERest.cfg -I mlf/phones1.mlf -t 250.0 150.0 1000.0 -S scp_files/train.scp -H hmm/hmm6/macros -H hmm/hmm6/hmmdefs -M hmm/hmm7 phones/monophones1
 
 	cp mlf/phones1.mlf mlf/aligned.mlf
-	HVite -o SWT -b silence -a -H hmm/hmm7/macros -H hmm/hmm7/hmmdefs -i mlf/aligned.mlf -m -t 250.0 -y lab -I mlf/words.mlf -S scp_files/train.scp dict/vndict.dic phones/monophones1
+	HVite -o SWT -b silence -a -H hmm/hmm7/macros -H hmm/hmm7/hmmdefs -i mlf/aligned.mlf -m -y lab -I mlf/words.mlf -S scp_files/train.scp dict/vndict.dic phones/monophones1
 	HERest -C cfg/HERest.cfg -I mlf/aligned.mlf -t 250.0 150.0 1000.0 -s stats -S scp_files/train.scp -H hmm/hmm7/macros -H hmm/hmm7/hmmdefs -M hmm/hmm8 phones/monophones1
 	HERest -C cfg/HERest.cfg -I mlf/aligned.mlf -t 250.0 150.0 1000.0 -s stats -S scp_files/train.scp -H hmm/hmm8/macros -H hmm/hmm8/hmmdefs -M hmm/hmm9 phones/monophones1
 	@echo "Tied tri-phone"
@@ -97,8 +99,8 @@ training_sentence:
 	HERest -B -C cfg/HERest.cfg -I mlf/wintri.mlf -t 250.0 150.0 1000.0 -s stats -S scp_files/train.scp -H hmm/hmm11/macros -H hmm/hmm11/hmmdefs -M hmm/hmm12 phones/triphones1
 	# perl pl/mkFullList.pl phones/monophones1 phones/fulllist
 	python py/create_fulllist.py phones/monophones1 fulllist
-	perl pl/mkTree.pl 350 phones/monophones1 ins/tree.hed
-	# ruby main.rb --make-tree-hed=40
+	# perl pl/mkTree.pl 350 phones/monophones1 ins/tree.hed
+	ruby main.rb --make-tree-hed=350
 
 	ruby main.rb --clean-full-list
 	HHEd -B -H hmm/hmm12/macros -H hmm/hmm12/hmmdefs -M hmm/hmm13 ins/tree.hed phones/triphones1
@@ -116,13 +118,13 @@ testing_sentence:
 	ruby main.rb -s --path="test_wav" --act='MakeWavMfc4Test'
 	ruby main.rb --make-testwords-mlf
 	HCopy -T 1 -C cfg/HCopy.cfg -S scp_files/mfcc_test.scp
-	LNewMap languageModel LM/empty.wmap
-	LGPrep -T 1 -a 2000000 -b 30000000 -n 3 -d LM LM/empty.wmap wordmap-corpus.txt
-	LBuild -T 1 -c 2 0 -c 3 0 -n 3 LM/wmap LM/lmModel LM/gram.0
-	# LPlex -n 3 -t LM/lmModel wordmap.txt
+	LNewMap -f WFC languageModel LM/empty.wmap
+	LGPrep -T 1 -a 1000000 -b 2000000 -n 3 -d LM LM/empty.wmap wordmap.txt
+	# WINDOWS ATTENTION: replace LM/gram.* for each gram.no listed in your LM. EG: LM/gram.0 LM/gram.1 ...
+	LBuild -T 1 -c 2 0 -c 3 0 -n 3 LM/wmap LM/lmModel LM/gram.*
+	LPlex -n 3 -t LM/lmModel wordmap-corpus.txt
 	HDecode -H hmm/hmm15/macros -H hmm/hmm15/hmmdefs -S scp_files/test.scp -t 220.0 220.0 -C cfg/config.hdecode -i recout.mlf -w LM/lmModel -p 0.0 -s 5.0 dict/vndict.dic tiedlist
-	# HResults -I mlf/testwords.mlf tiedlist recout.mlf > result.txt
-
+	HResults -I mlf/testwords.mlf tiedlist recout.mlf > result.txt
 
 crawl:
 	cd crawler && ruby crawler.rb && cd .. 
