@@ -150,6 +150,7 @@ $ find /Users/keymaster/xxx/xxx/Corpus/AILab-xxx/train/waves -maxdepth 2 -type f
 
 $ find /Users/keymaster/xxx/xxx/Corpus/AILab-xxx/test/waves -maxdepth 2 -type f -name '*.wav' | xargs -I {} cp {} test_wav/
 ```
+Lưu ý: Windows có thể phải tìm cách khác có chức năng lấy toàn bộ file .wav đưa vào thư mục tương ứng bên htk-support
 
 Format file crawl-corpus thành wordmap-corpus
 
