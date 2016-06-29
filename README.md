@@ -152,7 +152,7 @@ $ find /Users/keymaster/xxx/xxx/Corpus/AILab-xxx/test/waves -maxdepth 2 -type f 
 ```
 Lưu ý: Windows có thể phải tìm cách khác có chức năng lấy toàn bộ file .wav đưa vào thư mục tương ứng bên htk-support
 
-Format file crawl-corpus thành wordmap-corpus
+**Format file crawl-corpus thành wordmap-corpus**
 
 ```sh
 ruby main.rb --cc --path=/Users/keymaster/xxx/xxx/Corpus/AILab-2016/linguistic/corpus  --topath=wordmap-corpus.txt
