@@ -158,7 +158,7 @@ Lưu ý: Windows có thể phải tìm cách khác có chức năng lấy toàn 
 ruby main.rb --cc --path=/Users/keymaster/xxx/xxx/Corpus/AILab-2016/linguistic/corpus  --topath=wordmap-corpus.txt
 ```
 
-## Huấn luyện **
+## Huấn luyện
 
 ```sh
 $ make practice_sentence
@@ -173,7 +173,7 @@ Note: Hiện tại không biết do máy mình thiếu RAM (HDecode không alloc
 
 HDecode chạy khá lâu
 
-## Kiểm tra**
+## Kiểm tra
 
 ```sh
 $ make testing_sentence
@@ -188,6 +188,30 @@ Nếu bỏ options --f trong quá trình tạo dict thì trong quá trình gọi
 Phải thực hiện đầy đủ các bước trước khi huấn luyện đã nêu trên, chép file vô thư mục train_wav/test_wav ...
 
 File crawl_result vẫn đang có lỗi câu bị lặp. Cách xử lý tạm thời là đọc toàn bộ file, transform dòng thành mảng, gọi unique!
+
+# Text to speech
+
+Đọc giờ hiện tại trong hệ thống
+
+## Pre-requisite
+
+Gem `audio-playback` *yêu cầu* cài đặt các bộ mở rộng sau để có thể phát ra âm thanh
+
+1. http://portaudio.com/docs/v19-doxydocs/pages.html
+2. https://github.com/erikd/libsndfile
+
+Note: Cả 2 thư viện trên đều có thể được cài bằng Brew, APT, Yum ...
+https://github.com/arirusso/audio-playback
+
+## Thực hiện
+
+Trước tiên huấn luyện HERest từ hmm7 đến hmm15 để kết quả smooth hơn.
+Sau đó là phát âm
+
+```sh
+$ make prepare_txt2speech
+$ make txt2speech
+```
 
 # License
 
