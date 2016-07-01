@@ -19,10 +19,10 @@ class TXT2Speech
 		hour > 12 ? (hour = hour - 12; meridan = "chiều") : (meridan = "sáng")
 		@input = VietnameseSpeaker.timestandard(year,month,day,hour,min,sec,meridan)
 		@db_instance = DBExec.new
-		@speaker = SoundCutter.new
 	end
 
 	def action
+		@speaker = SoundCutter.new
 		@db_instance.create_db
 		arr = get_system_time_in_telex
 
