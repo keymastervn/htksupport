@@ -17,7 +17,7 @@ class TXT2Speech
 		min = current.min
 		sec = current.sec
 		hour > 12 ? (hour = hour - 12; meridan = "chiều") : (meridan = "sáng")
-		@input = VietnameseSpeaker.timestandard(year,month,day,hour,min,sec,meridan)
+		@input = TimeNormalizationToVietnamese.timestandard(year,month,day,hour,min,sec,meridan)
 		@db_instance = DBExec.new
 	end
 
@@ -31,9 +31,12 @@ class TXT2Speech
 			current_word = txt
 			i + 1 < arr.length ? next_word = arr[i+1] : next_word = nil
 
-			file, occur_from, occur_to = @db_instance.query_db(previous_word, current_word, next_word)
-			@speaker.create_snippet_then_play(file, occur_from, occur_to)
+			file, occur_from, occur_to = @db_instance.query_db(previous_word, current_word, next_word, arr, i)
+			@speaker.create_snippet(file, occur_from, occur_to)
 		}
+		@speaker.play
+
+		puts "Completed"
 	end
 
 	def get_system_time_in_telex
@@ -50,6 +53,7 @@ class DBExec
 	def initialize
 		@alignment = File.open(File.join("mlf", "aligned.mlf"))
 		@db = SQLite3::Database.new DBNAME
+		@first_priority_file = nil
 	end
 
 	def data_existed?
@@ -133,8 +137,35 @@ class DBExec
 		end
 	end
 
-	def query_db(previous_word, word, next_word)
+# bay gio la chin gio muoi mot phut
+	def query_db(previous_word, word, next_word, array, index)
 		raise "DB is not found" if !File.exists? DBNAME
+
+		# uu tien trong cung file
+		if @first_priority_file
+			result = @db.execute(
+				"SELECT filename, occur_from, occur_to 
+				FROM #{TABLENAME}
+				WHERE previous_word = ? AND word = ? AND next_word = ?
+				AND filename = ?
+				LIMIT 1",
+				[previous_word.to_s, word.to_s, next_word.to_s, @first_priority_file]
+			).first
+
+			if result.present?
+				return result 
+			else
+				result = @db.execute(
+					"SELECT filename, occur_from, occur_to 
+					FROM #{TABLENAME}
+					WHERE previous_word = ? AND word = ?
+					AND filename = ?
+					LIMIT 1",
+					[previous_word.to_s, word.to_s, @first_priority_file]
+				).first
+				return result if result.present?
+			end
+		end
 
 		# query 3 tu truoc
 		result = @db.execute(
@@ -174,6 +205,7 @@ class DBExec
 
 		raise "No word found in aligned.mlf: #{word.to_s}" unless result.present?
 
+		@first_priority_file = result.first
 		return result
 	end
 
@@ -188,7 +220,7 @@ class DBExec
 	end
 end
 
-class VietnameseSpeaker
+class TimeNormalizationToVietnamese
 	HASH = {
 		1 => "một",
 		2 => "hai",
@@ -257,7 +289,7 @@ class VietnameseSpeaker
 				return HASH[unit]
 			end
 
-			return [HASH[tenth], HASH[unit]].join(" ")
+			return [HASH[tenth], "mươi", HASH[unit]].join(" ")
 		elsif int < 1000
 			# hundred
 			hundredth = int / 100
@@ -280,9 +312,10 @@ class SoundCutter
 		puts "Chon thiet bi playback truoc khi phat ra am thanh"
 		@output = AudioPlayback::Device::Output.gets
 		@os_temp_dir = Dir.tmpdir()
+		@snippets = []
 	end
 
-	def create_snippet_then_play(file, occur_from, occur_to)
+	def create_snippet(file, occur_from, occur_to)
 		first_seen = occur_from.to_i / 10_000_000.to_f
 		last_seen = occur_to.to_i / 10_000_000.to_f + SHORT_PAUSE_BUFFER
 
@@ -308,14 +341,28 @@ class SoundCutter
 			snd.read(buf, bytes_to_read)
 
 			# create new file's name from original to tmp dir
-			sndsnip_name = File.join(@os_temp_dir, sound_original_name + "_snippet.wav")
-
+			sndsnip_name = File.join(@os_temp_dir, sound_original_name + Random.new.rand(10000).to_s + "_snippet.wav")
 			# write the new snippet to a file
 			out = Sound.open(sndsnip_name, "w", info.clone)
 			out.write(buf)
 
-			# play snippet
-			@playback = AudioPlayback.play(sndsnip_name, :output_device => @output)
+			@snippets << sndsnip_name
+		end
+	end
+
+	def play
+		@sounds = @snippets.map { |file| AudioPlayback::Sound.load(file) }
+		@stream = nil
+
+		@sounds.each_with_index do |sound, i|
+
+			@playback = AudioPlayback::Playback.new(@sounds[i], @output, :stream => @stream)
+			@stream ||= @playback.stream
+
+			# Start playback
+			@playback.start
+
+			# Play in foreground
 			@playback.block
 		end
 	end
