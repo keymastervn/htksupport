@@ -2,12 +2,14 @@ require 'optparse'
 require 'ostruct'
 require './htk'
 require './string_helper'
+require './txt2speech'
 
 class Parser
   def self.parse(args)
 
     # We set default values here.
     htkrunner = HTKSupport.new
+    speaker = TXT2Speech.new
     options = OpenStruct.new
     options.library = []
     options.inplace = false
@@ -140,6 +142,9 @@ class Parser
         exit
       end
 
+      opts.on("--speak","Doc gio he thong theo format tieng Viet") do
+        puts speaker.action
+      end
     end
 
     opt_parser.parse!(args)

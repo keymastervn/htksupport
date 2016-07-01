@@ -133,3 +133,19 @@ evaluation:
 	LNewMap LM empty.wmap
 	ruby main.rb --cc --path=crawler/crawl_result.txt --topath=wordmap.txt
 
+prepare_txt2speech:
+	HERest -C cfg/HERest.cfg -I mlf/phones1.mlf -t 250.0 150.0 1000.0 -S scp_files/train.scp -H hmm/hmm6/macros -H hmm/hmm6/hmmdefs -M hmm/hmm7 phones/monophones1
+	HERest -C cfg/HERest.cfg -I mlf/phones1.mlf -t 250.0 150.0 1000.0 -S scp_files/train.scp -H hmm/hmm7/macros -H hmm/hmm7/hmmdefs -M hmm/hmm8 phones/monophones1
+	HERest -C cfg/HERest.cfg -I mlf/phones1.mlf -t 250.0 150.0 1000.0 -S scp_files/train.scp -H hmm/hmm8/macros -H hmm/hmm8/hmmdefs -M hmm/hmm9 phones/monophones1
+	HERest -C cfg/HERest.cfg -I mlf/phones1.mlf -t 250.0 150.0 1000.0 -S scp_files/train.scp -H hmm/hmm9/macros -H hmm/hmm9/hmmdefs -M hmm/hmm10 phones/monophones1
+	HERest -C cfg/HERest.cfg -I mlf/phones1.mlf -t 250.0 150.0 1000.0 -S scp_files/train.scp -H hmm/hmm10/macros -H hmm/hmm10/hmmdefs -M hmm/hmm11 phones/monophones1
+	HERest -C cfg/HERest.cfg -I mlf/phones1.mlf -t 250.0 150.0 1000.0 -S scp_files/train.scp -H hmm/hmm11/macros -H hmm/hmm11/hmmdefs -M hmm/hmm12 phones/monophones1
+	HERest -C cfg/HERest.cfg -I mlf/phones1.mlf -t 250.0 150.0 1000.0 -S scp_files/train.scp -H hmm/hmm12/macros -H hmm/hmm12/hmmdefs -M hmm/hmm13 phones/monophones1
+	HERest -C cfg/HERest.cfg -I mlf/phones1.mlf -t 250.0 150.0 1000.0 -S scp_files/train.scp -H hmm/hmm13/macros -H hmm/hmm13/hmmdefs -M hmm/hmm14 phones/monophones1
+	HERest -C cfg/HERest.cfg -I mlf/phones1.mlf -t 250.0 150.0 1000.0 -S scp_files/train.scp -H hmm/hmm14/macros -H hmm/hmm14/hmmdefs -M hmm/hmm15 phones/monophones1
+	cp mlf/phones1.mlf mlf/aligned.mlf
+	HVite -o S -b silence -b SENT-END -a -H hmm/hmm15/macros -H hmm/hmm15/hmmdefs -i mlf/aligned.mlf -m -y lab -I mlf/words.mlf -S scp_files/train.scp dict/vndict.dic phones/monophones1
+
+txt2speech:
+	@echo "remember to install support dependencies first"
+	ruby main.rb --speak
