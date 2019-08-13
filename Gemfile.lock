@@ -11,7 +11,7 @@ GEM
       ffi-libc (~> 0.1, >= 0.1.0)
       ffi-portaudio (~> 0.1, >= 0.1.2)
       ruby-audio (~> 1.6, >= 1.6.1)
-    ffi (1.9.10)
+    ffi (1.11.1)
     ffi-libc (0.1.0)
       ffi (~> 1.0)
     ffi-portaudio (0.1.2)
